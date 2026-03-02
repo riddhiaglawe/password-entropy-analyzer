@@ -1,3 +1,7 @@
+## 🌐 Live Demo
+
+https://password-entropy-analyzer.onrender.com
+
 # 🔐 Password Entropy Calculator  
 ### Cyber Security & Digital Forensic Analysis Tool
 
