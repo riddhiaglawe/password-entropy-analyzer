@@ -1,0 +1,170 @@
+body {
+    font-family: Arial, sans-serif;
+    background: #f1f3f4;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    transition: 0.3s;
+}
+
+.container {
+    width: 500px;
+    background: #ffffff;
+    padding: 40px;
+    border-radius: 16px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+}
+
+h1 {
+    margin-bottom: 30px;
+    font-weight: 600;
+}
+
+input[type="password"],
+input[type="text"],
+input[type="number"] {
+    width: 100%;
+    padding: 14px;
+    border-radius: 8px;
+    border: 1px solid #dadce0;
+    margin-bottom: 15px;
+    font-size: 14px;
+}
+
+.checkbox-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 25px;
+}
+
+.generator-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 25px;
+}
+
+.generator-row input[type="number"] {
+    width: 120px;
+    height: 48px;
+    margin: 0;                 /* remove default margin */
+    padding: 0 12px;
+    box-sizing: border-box;
+    border-radius: 10px;
+    border: 1px solid #dadce0;
+}
+
+.generator-row button {
+    height: 48px;
+    margin: 0;                 /* remove default margin */
+    flex: 1;
+    display: flex;
+    align-items: center;       /* center text vertically */
+    justify-content: center;   /* center text horizontally */
+}
+
+button {
+    flex: 1;
+    height: 48px;
+    background: #1a73e8;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 15px;
+    transition: 0.2s ease;
+}
+
+button:hover {
+    background: #1558b0;
+}
+
+.meter {
+    width: 100%;
+    height: 8px;
+    background: #e0e0e0;
+    border-radius: 5px;
+    margin-top: 10px;
+}
+
+.meter-fill {
+    height: 100%;
+    border-radius: 5px;
+    transition: 0.4s;
+}
+
+.attack-sim,
+.suggestions {
+    margin-top: 25px;
+}
+
+/* Dark Mode */
+.dark-mode {
+    background: #202124;
+    color: #e8eaed;
+}
+
+.dark-mode .container {
+    background: #303134;
+}
+
+.dark-mode input {
+    background: #3c4043;
+    color: #e8eaed;
+    border: 1px solid #5f6368;
+}
+
+.dark-mode .meter {
+    background: #5f6368;
+}
+
+/* Professional Toggle */
+.theme-toggle {
+    position: absolute;
+    top: 25px;
+    right: 30px;
+}
+
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 70px;
+    height: 32px;
+}
+
+.switch input {
+    opacity: 0;
+}
+
+.slider {
+    position: absolute;
+    inset: 0;
+    background: #ccc;
+    border-radius: 40px;
+    display: flex;
+    align-items: center;
+    padding: 0 8px;
+    transition: 0.3s;
+}
+
+.icon {
+    font-size: 16px;
+    transition: 0.3s;
+}
+
+.switch input:checked + .slider {
+    background: #1a73e8;
+    justify-content: flex-end;
+}
+
+.switch input:checked + .slider .icon {
+    transform: rotate(360deg);
+}
+
+.reportBtn {
+    margin-top: 20px;
+}

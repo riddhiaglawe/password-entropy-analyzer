@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Password Entropy Calculator</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<div class="theme-toggle">
+    <label class="switch">
+        <input type="checkbox" id="themeSwitch">
+        <span class="slider"><span class="icon">🌞</span></span>
+    </label>
+</div>
+
+<div class="container">
+
+<h1>🔐 Password Entropy Calculator</h1>
+
+<input type="password" id="password" placeholder="Enter your password">
+
+<div class="checkbox-row">
+    <input type="checkbox" id="showPass">
+    <label for="showPass">Show password</label>
+</div>
+
+<div class="generator-row">
+    <input type="number" id="length" value="12" min="6" max="30">
+    <button id="generateBtn">🔑 Generate Secure Password</button>
+</div>
+
+<div class="result">
+    <h3 id="entropy"></h3>
+    <h3 id="strength"></h3>
+    <h3 id="crack"></h3>
+    <div class="meter">
+        <div class="meter-fill" id="meter-fill"></div>
+    </div>
+</div>
+
+<div class="attack-sim">
+    <h4>Attack Simulation</h4>
+    <p id="attack-text"></p>
+</div>
+
+<div class="suggestions">
+    <h4>Suggestions</h4>
+    <ul id="suggestion-list"></ul>
+</div>
+
+<button id="reportBtn">📄 Generate Forensic Report (PDF)</button>
+
+</div>
+
+<script>
+
+const passwordInput = document.getElementById("password");
+const showPass = document.getElementById("showPass");
+const generateBtn = document.getElementById("generateBtn");
+const reportBtn = document.getElementById("reportBtn");
+const themeSwitch = document.getElementById("themeSwitch");
+const icon = document.querySelector(".icon");
+
+/* Dark Mode */
+if (themeSwitch) {
+    themeSwitch.addEventListener("change", function() {
+        document.body.classList.toggle("dark-mode");
+        icon.textContent = this.checked ? "🌙" : "🌞";
+    });
+}
+
+/* Show Password */
+showPass.addEventListener("change", function() {
+    passwordInput.type = this.checked ? "text" : "password";
+});
+
+/* Real-Time Analysis */
+passwordInput.addEventListener("input", function() {
+
+fetch("/analyze", {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({password: this.value})
+})
+.then(res => res.json())
+.then(data => {
+
+    /* Update Text Values */
+    document.getElementById("entropy").innerText =
+        "Entropy: " + data.entropy + " bits";
+
+    document.getElementById("strength").innerText =
+        "Strength: " + data.strength;
+
+    document.getElementById("strength").style.color = data.color;
+
+    document.getElementById("crack").innerText =
+        "Estimated Crack Time: " + data.years + " years";
+
+    /* ===== FIX METER ===== */
+    const meterFill = document.getElementById("meter-fill");
+    meterFill.style.width = data.meter_width + "%";
+    meterFill.style.backgroundColor = data.color;
+
+    /* ===== FIX SUGGESTIONS ===== */
+    const list = document.getElementById("suggestion-list");
+    list.innerHTML = "";
+
+    if (data.suggestions && data.suggestions.length > 0) {
+        data.suggestions.forEach(function(s) {
+            const li = document.createElement("li");
+            li.textContent = s;
+            list.appendChild(li);
+        });
+    } else {
+        const li = document.createElement("li");
+        li.textContent = "No suggestions needed. Password is well structured.";
+        list.appendChild(li);
+    }
+
+    animateAttack(data.years);
+});
+});
+
+/* Generate Password */
+generateBtn.addEventListener("click", function() {
+    let length = document.getElementById("length").value;
+
+    fetch("/generate", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({length: length})
+    })
+    .then(res => res.json())
+    .then(data => {
+        passwordInput.value = data.password;
+        passwordInput.dispatchEvent(new Event("input"));
+    });
+});
+
+/* PDF Report */
+reportBtn.addEventListener("click", function() {
+    fetch("/generate_report", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({password: passwordInput.value})
+    })
+    .then(response => response.blob())
+    .then(blob => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "Forensic_Report.pdf";
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+    });
+});
+
+/* Attack Simulation */
+function animateAttack(years) {
+    let text = document.getElementById("attack-text");
+    text.innerText = "Simulating brute-force attack...";
+    setTimeout(() => {
+        text.innerText = "Trying billions of guesses per second...";
+    }, 1000);
+    setTimeout(() => {
+        text.innerText = "Estimated crack time: " + years + " years.";
+    }, 2000);
+}
+
+</script>
+
+</body>
+</html>
